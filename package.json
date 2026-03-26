@@ -1,7 +1,15 @@
 {
   "name": "hianime-api",
-  "version": "2.1.3",
+  "version": "2.0.0",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryanwtf7/hianime-api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ryanwtf7/hianime-api/issues"
+  },
+  "homepage": "https://github.com/ryanwtf7/hianime-api#readme",
   "scripts": {
     "dev": "bun run --hot index.ts",
     "start": "bun index.ts",
