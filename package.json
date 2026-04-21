@@ -22,7 +22,8 @@
     "test:ui": "vitest --ui",
     "test:jest": "NODE_OPTIONS='--experimental-vm-modules' jest",
     "test:all": "bun run test && bun run test:jest",
-    "clean": "rm -rf dist node_modules/.cache"
+    "clean": "rm -rf dist node_modules/.cache",
+    "vercel-build": "bunx esbuild api/_handler.ts --bundle --platform=node --format=cjs --outfile=api/index.js"
   },
   "dependencies": {
     "@hono/node-server": "^1.8.2",
