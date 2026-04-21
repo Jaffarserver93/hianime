@@ -29,6 +29,17 @@ if (!config.isProduction || config.enableLogging) {
   app.use('/api/v2/*', logger());
 }
 
+// Root route
+app.get('/', (c: Context) => {
+  return c.json({
+    status: 'ok',
+    message: 'HiAnime API Server',
+    timestamp: new Date().toISOString(),
+    environment: config.isVercel ? 'vercel' : 'self-hosted',
+  });
+});
+
+// Health check
 app.get('/ping', (c: Context) => {
   return c.json({
     status: 'ok',
@@ -47,8 +58,8 @@ app.onError((err, c) => {
     return fail(c, err.message, err.statusCode, err.details);
   }
 
-  console.error('Unexpected Error:', err.message);
-  if (!config.isProduction) {
+  console.error('Unexpected Error:', err instanceof Error ? err.message : String(err));
+  if (!config.isProduction && err instanceof Error) {
     console.error('Stack:', err.stack);
   }
 
