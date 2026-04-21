@@ -33,6 +33,16 @@ if (!config.isProduction || config.enableLogging) {
   app.use('/api/v2/*', logger());
 }
 
+// Root route
+app.get('/', (c) => {
+  return c.json({
+    status: 'ok',
+    message: 'HiAnime API Server',
+    timestamp: new Date().toISOString(),
+    environment: 'vercel',
+  });
+});
+
 // Health Check
 app.get('/ping', (c) => {
   return c.json({
@@ -51,7 +61,8 @@ app.onError((err, c) => {
     return fail(c, err.message, err.statusCode, err.details);
   }
 
-  console.error('Vercel Unexpected Error:', err.message);
+  console.error('[v0] Vercel Unexpected Error:', err instanceof Error ? err.message : String(err));
+  console.error('[v0] Error Stack:', err instanceof Error ? err.stack : 'No stack trace');
   return fail(c, 'Internal server error', 500);
 });
 
@@ -59,4 +70,15 @@ app.notFound((c) => {
   return fail(c, 'Route not found', 404);
 });
 
-export default handle(app);
+// Wrap handler with safety check
+let handler_export: any;
+try {
+  handler_export = handle(app);
+} catch (initError) {
+  console.error('[v0] Failed to initialize handler:', initError instanceof Error ? initError.message : String(initError));
+  handler_export = (req: any, res: any) => {
+    res.status(500).json({ error: 'Handler initialization failed' });
+  };
+}
+
+export default handler_export;
